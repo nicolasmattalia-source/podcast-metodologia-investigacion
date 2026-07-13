@@ -26,6 +26,7 @@ const totalTimeLabel = document.querySelector("#total-time");
 const playBtn = document.querySelector("#play-btn");
 const rewindBtn = document.querySelector("#rewind-btn");
 const forwardBtn = document.querySelector("#forward-btn");
+const downloadBtn = document.querySelector("#download-btn");
 
 const loginBtn = document.querySelector("#login-btn");
 const logoutBtn = document.querySelector("#logout-btn");
@@ -45,6 +46,7 @@ let unsubscribeComments = null;
 
 setupPlayer();
 setupFirebase();
+setupDownload();
 
 function setupPlayer() {
   playBtn.addEventListener("click", togglePlayback);
@@ -144,6 +146,48 @@ function formatTime(value) {
   const seconds = totalSeconds % 60;
 
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function setupDownload() {
+  downloadBtn.addEventListener("click", downloadEpisode);
+}
+
+async function downloadEpisode() {
+  const fileName = "Grupo 8.mp4";
+
+  try {
+    if ("showSaveFilePicker" in window) {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [
+          {
+            description: "Archivo MP4",
+            accept: {
+              "video/mp4": [".mp4"],
+            },
+          },
+        ],
+      });
+
+      const response = await fetch("./Podcast.mp4");
+      const fileBlob = await response.blob();
+      const writable = await handle.createWritable();
+      await writable.write(fileBlob);
+      await writable.close();
+      return;
+    }
+
+    const tempLink = document.createElement("a");
+    tempLink.href = "./Podcast.mp4";
+    tempLink.download = fileName;
+    document.body.appendChild(tempLink);
+    tempLink.click();
+    tempLink.remove();
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.error(error);
+    }
+  }
 }
 
 function setupFirebase() {
