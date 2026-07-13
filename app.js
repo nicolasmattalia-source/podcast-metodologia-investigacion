@@ -18,6 +18,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const EPISODE_ID = "podcast-principal";
+const EPISODE_FILE = "./Grupo 8.mp3";
+const DOWNLOAD_FILE_NAME = "Grupo 8.mp3";
 
 const media = document.querySelector("#podcast-media");
 const seekBar = document.querySelector("#seek-bar");
@@ -153,23 +155,21 @@ function setupDownload() {
 }
 
 async function downloadEpisode() {
-  const fileName = "Grupo 8.mp4";
-
   try {
     if ("showSaveFilePicker" in window) {
       const handle = await window.showSaveFilePicker({
-        suggestedName: fileName,
+        suggestedName: DOWNLOAD_FILE_NAME,
         types: [
           {
-            description: "Archivo MP4",
+            description: "Archivo MP3",
             accept: {
-              "video/mp4": [".mp4"],
+              "audio/mpeg": [".mp3"],
             },
           },
         ],
       });
 
-      const response = await fetch("./Podcast.mp4");
+      const response = await fetch(EPISODE_FILE);
       const fileBlob = await response.blob();
       const writable = await handle.createWritable();
       await writable.write(fileBlob);
@@ -178,8 +178,8 @@ async function downloadEpisode() {
     }
 
     const tempLink = document.createElement("a");
-    tempLink.href = "./Podcast.mp4";
-    tempLink.download = fileName;
+    tempLink.href = EPISODE_FILE;
+    tempLink.download = DOWNLOAD_FILE_NAME;
     document.body.appendChild(tempLink);
     tempLink.click();
     tempLink.remove();

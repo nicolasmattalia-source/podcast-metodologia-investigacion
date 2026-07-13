@@ -1,6 +1,6 @@
 # Podcast Player
 
-Esta carpeta ahora contiene una página estática para reproducir `Podcast.mp4`, con:
+Esta carpeta ahora contiene una página estática para reproducir `Grupo 8.mp3`, con:
 
 - `play/pause`
 - retroceso de 15 segundos
