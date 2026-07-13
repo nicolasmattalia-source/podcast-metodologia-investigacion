@@ -155,7 +155,13 @@ function setupDownload() {
 }
 
 async function downloadEpisode() {
+  const originalLabel = downloadBtn.textContent;
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = "Preparando descarga...";
+
   try {
+    const fileBlob = await fetchEpisodeBlob();
+
     if ("showSaveFilePicker" in window) {
       const handle = await window.showSaveFilePicker({
         suggestedName: DOWNLOAD_FILE_NAME,
@@ -169,25 +175,45 @@ async function downloadEpisode() {
         ],
       });
 
-      const response = await fetch(EPISODE_FILE);
-      const fileBlob = await response.blob();
       const writable = await handle.createWritable();
       await writable.write(fileBlob);
       await writable.close();
       return;
     }
 
-    const tempLink = document.createElement("a");
-    tempLink.href = EPISODE_FILE;
-    tempLink.download = DOWNLOAD_FILE_NAME;
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    tempLink.remove();
+    triggerBlobDownload(fileBlob);
   } catch (error) {
     if (error?.name !== "AbortError") {
       console.error(error);
+      window.open(EPISODE_FILE, "_blank", "noopener");
     }
+  } finally {
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = originalLabel;
   }
+}
+
+async function fetchEpisodeBlob() {
+  const response = await fetch(EPISODE_FILE);
+
+  if (!response.ok) {
+    throw new Error(`No se pudo descargar el archivo: ${response.status}`);
+  }
+
+  return response.blob();
+}
+
+function triggerBlobDownload(fileBlob) {
+  const objectUrl = URL.createObjectURL(fileBlob);
+  const tempLink = document.createElement("a");
+
+  tempLink.href = objectUrl;
+  tempLink.download = DOWNLOAD_FILE_NAME;
+  document.body.appendChild(tempLink);
+  tempLink.click();
+  tempLink.remove();
+
+  window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
 }
 
 function setupFirebase() {
