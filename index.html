@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podcast de metodologia de investigacion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero-card">
+      <div class="hero-copy">
+        <h1>Podcast de metodologia de investigacion</h1>
+      </div>
+
+      <div class="orb orb-left" aria-hidden="true"></div>
+      <div class="orb orb-right" aria-hidden="true"></div>
+    </section>
+
+    <section class="player-card" aria-labelledby="player-title">
+      <div class="player-header">
+        <div>
+          <p class="section-label">Episodio disponible</p>
+          <h2 id="player-title">Capítulo 1</h2>
+        </div>
+      </div>
+
+      <video id="podcast-media" class="media-element" preload="metadata" playsinline>
+        <source src="./Podcast.mp4" type="video/mp4">
+        Tu navegador no puede reproducir este archivo.
+      </video>
+
+      <div class="cover-panel" aria-hidden="true">
+        <div class="cover-ring"></div>
+        <div class="cover-content">
+          <p>Ahora sonando</p>
+          <strong>Podcast.mp4</strong>
+        </div>
+      </div>
+
+      <div class="timeline-block">
+        <label class="sr-only" for="seek-bar">Barra de progreso</label>
+        <input id="seek-bar" class="seek-bar" type="range" min="0" max="100" value="0">
+        <div class="time-row">
+          <span id="current-time">00:00</span>
+          <span id="total-time">00:00</span>
+        </div>
+      </div>
+
+      <div class="controls" aria-label="Controles del reproductor">
+        <button id="rewind-btn" class="control-btn secondary" type="button">-15s</button>
+        <button id="play-btn" class="control-btn primary" type="button">Reproducir</button>
+        <button id="forward-btn" class="control-btn secondary" type="button">+30s</button>
+      </div>
+    </section>
+
+    <section class="comments-card" aria-labelledby="comments-title">
+      <div class="comments-header">
+        <div>
+          <p class="section-label">Comunidad</p>
+          <h2 id="comments-title">Comentarios</h2>
+        </div>
+        <div class="auth-panel">
+          <button id="login-btn" class="auth-btn" type="button">Ingresar con Google</button>
+          <button id="logout-btn" class="auth-btn ghost hidden" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div id="firebase-warning" class="notice warning hidden" role="status">
+        Completá `firebase-config.js` para habilitar el login de Google y guardar comentarios.
+      </div>
+
+      <div id="auth-status" class="notice" role="status">
+        Iniciá sesión con Google para dejar un comentario.
+      </div>
+
+      <form id="comment-form" class="comment-form" novalidate>
+        <label class="sr-only" for="comment-input">Escribí tu comentario</label>
+        <textarea
+          id="comment-input"
+          name="comment"
+          rows="4"
+          maxlength="500"
+          placeholder="Compartí tu opinión sobre este episodio..."
+          disabled
+        ></textarea>
+        <div class="form-row">
+          <small id="comment-help">Máximo 500 caracteres.</small>
+          <button id="submit-btn" class="submit-btn" type="submit" disabled>Publicar comentario</button>
+        </div>
+      </form>
+
+      <div id="comments-empty" class="empty-state">
+        Todavía no hay comentarios. El primero puede ser el tuyo.
+      </div>
+
+      <ul id="comments-list" class="comments-list" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <script src="./firebase-config.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
